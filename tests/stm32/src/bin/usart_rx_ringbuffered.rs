@@ -154,7 +154,7 @@ async fn transmit_task(mut tx: UartTx<'static, board::Uart, board::TxDma>) {
 
     let mut i: u8 = 0;
     loop {
-        let mut buf = [0; 256];
+        let mut buf = [0; 32];
         let len = 1 + (rng.next_u32() as usize % buf.len());
         for b in &mut buf[..len] {
             *b = i;
@@ -162,6 +162,8 @@ async fn transmit_task(mut tx: UartTx<'static, board::Uart, board::TxDma>) {
         }
 
         tx.write(&buf[..len]).await.unwrap();
+        info!("sent {=usize}", len);
+
         Timer::after(Duration::from_micros((rng.next_u32() % 1000) as _)).await;
     }
 }
@@ -175,7 +177,7 @@ async fn receive_task(mut rx: RingBufferedUartRx<'static, board::Uart, board::Rx
     let mut i = 0;
     let mut expected = 0;
     loop {
-        let mut buf = [0; 256];
+        let mut buf = [0; 32];
         let max_len = 1 + (rng.next_u32() as usize % buf.len());
         let received = match rx.read(&mut buf[..max_len]).await {
             Ok(r) => r,
@@ -183,6 +185,7 @@ async fn receive_task(mut rx: RingBufferedUartRx<'static, board::Uart, board::Rx
                 panic!("Test fail! read error: {:?}", e);
             }
         };
+        info!("received {=usize}", received);
 
         for byte in &buf[..received] {
             assert_eq!(*byte, expected);
