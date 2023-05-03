@@ -127,7 +127,7 @@ async fn main(spawner: Spawner) {
     let mut config = Config::default();
     // this is the fastest we can go without tuning RCC
     // some chips have default pclk=8mhz, and uart can run at max pclk/16
-    config.baudrate = 500_000;
+    config.baudrate = 1_000_000;
     config.data_bits = DataBits::DataBits8;
     config.stop_bits = StopBits::STOP1;
     config.parity = Parity::ParityNone;
@@ -164,7 +164,7 @@ async fn transmit_task(mut tx: UartTx<'static, board::Uart, board::TxDma>) {
         tx.write(&buf[..len]).await.unwrap();
         info!("sent {=usize}", len);
 
-        Timer::after(Duration::from_micros((rng.next_u32() % 1000) as _)).await;
+        Timer::after(Duration::from_micros((rng.next_u32() % 500) as _)).await;
     }
 }
 
@@ -193,12 +193,12 @@ async fn receive_task(mut rx: RingBufferedUartRx<'static, board::Uart, board::Rx
         }
 
         if received < max_len {
-            Timer::after(Duration::from_micros((rng.next_u32() % 1000) as _)).await;
+            Timer::after(Duration::from_micros((rng.next_u32() % 500) as _)).await;
         }
 
         i += received;
 
-        if i > 100000 {
+        if i > 1000000 {
             info!("Test OK!");
             cortex_m::asm::bkpt();
         }
