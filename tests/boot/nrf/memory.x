@@ -5,7 +5,7 @@ MEMORY
   BOOTLOADER_STATE                  : ORIGIN = 0x00006000, LENGTH = 4K
   FLASH                             : ORIGIN = 0x00007000, LENGTH = 64K
   DFU                               : ORIGIN = 0x00017000, LENGTH = 68K
-  TESTSTATE                         : ORIGIN = 0x00028000, LENGTH = 4K
+  TEST_STATE                         : ORIGIN = 0x00028000, LENGTH = 4K
   RAM                         (rwx) : ORIGIN = 0x20000000, LENGTH = 32K
 }
 
@@ -15,6 +15,5 @@ __bootloader_state_end = ORIGIN(BOOTLOADER_STATE) + LENGTH(BOOTLOADER_STATE);
 __bootloader_dfu_start = ORIGIN(DFU);
 __bootloader_dfu_end = ORIGIN(DFU) + LENGTH(DFU);
 
-
-__teststate_start = ORIGIN(TESTSTATE);
-__teststate_end = ORIGIN(TESTSTATE) + LENGTH(TESTSTATE);
+__test_state_start = ORIGIN(TEST_STATE);
+__test-state_end = ORIGIN(TEST_STATE) + LENGTH(TEST_STATE);

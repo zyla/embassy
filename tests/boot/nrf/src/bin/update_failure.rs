@@ -7,7 +7,6 @@ teleprobe_meta::target!(b"nrf52840-dk");
 mod common;
 use common::*;
 
-use embassy_boot_nrf::{BlockingFirmwareUpdater, FirmwareUpdaterConfig};
 use embassy_executor::Spawner;
 use embassy_time::{Timer, Duration};
 use embassy_nrf::nvmc::Nvmc;
@@ -24,21 +23,10 @@ async fn main(s: Spawner) {
     let nvmc = Mutex::new(RefCell::new(nvmc));
 
     let mut state = TestState::init(&nvmc);
-    if state.num_boots == 1 {
-        let config = FirmwareUpdaterConfig::from_linkerfile_blocking(&nvmc);
+    state.inc(&nvmc);
 
-        let mut magic = [0; 4];
-        let mut updater = BlockingFirmwareUpdater::new(config, &mut magic);
-
-        updater.mark_booted().unwrap();
-        state.inc(&nvmc);
-        cortex_m::peripheral::SCB::sys_reset();
-    } else if state.num_boots == 2 {
-        // Test success!
-        cortex_m::asm::bkpt();
-    } else {
-        defmt::panic!("Unexpected number of boots");
-    }
+    // Simulate hang
+    loop {}
 }
 
 // Keeps our system alive
