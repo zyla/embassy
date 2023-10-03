@@ -6,8 +6,8 @@ description = "Bootloader for nRF chips"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-defmt = { version = "0.3", optional = true }
-defmt-rtt = { version = "0.4", optional = true }
+defmt = { version = "0.3" }
+defmt-rtt = { version = "0.4" }
 
 embassy-nrf = { path = "../../../../embassy-nrf", features = ["nightly"] }
 embassy-boot-nrf = { path = "../../../../embassy-boot/nrf" }
@@ -17,15 +17,9 @@ cortex-m-rt = { version = "0.7" }
 cfg-if = "1.0.0"
 
 [features]
-defmt = [
-    "dep:defmt",
-    "embassy-boot-nrf/defmt",
-    "embassy-nrf/defmt",
-]
 softdevice = [
     "embassy-boot-nrf/softdevice",
 ]
-debug = ["defmt-rtt", "defmt"]
 
 [profile.dev]
 debug = 2

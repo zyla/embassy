@@ -4,7 +4,6 @@
 use core::cell::RefCell;
 
 use cortex_m_rt::{entry, exception};
-#[cfg(feature = "defmt")]
 use defmt_rtt as _;
 use embassy_boot_nrf::*;
 use embassy_nrf::nvmc::Nvmc;
